@@ -1,13 +1,14 @@
 package ru.baib.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import ru.baib.model.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -15,6 +16,7 @@ import java.util.Properties;
 public class PostgresStore implements Store {
 
     private final BasicDataSource pool = new BasicDataSource();
+    private static final Logger LOG = LogManager.getLogger(PostgresStore.class.getName());
 
     private PostgresStore() {
         Properties cfg = new Properties();
@@ -66,7 +68,7 @@ public class PostgresStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
         response.setTask(task);
         response.setUser(clientMessage.getApplicationState().getCurrentUser());
@@ -94,7 +96,7 @@ public class PostgresStore implements Store {
                 taskList.add(task);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
         response.setTaskList(taskList);
         return response;
@@ -124,7 +126,7 @@ public class PostgresStore implements Store {
                 response.setStatus("Username or password is incorrect");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
         return response;
     }
@@ -140,7 +142,7 @@ public class PostgresStore implements Store {
             preparedStatement.setString(2, toReg.getPassword());
             preparedStatement.execute();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
         response.setStatus("User successfully added");
         return response;
@@ -161,7 +163,7 @@ public class PostgresStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
         return isExist;
     }
